@@ -12,6 +12,10 @@
   "agents": {
     // Исследовательский субагент: только чтение и веб, без edit/shell/subagent,
     // чтобы разведка не могла случайно что-то изменить.
+    // ВАЖНО: это native V2-форма (`permissions` — массив правил action/resource/effect).
+    // V1-форма `permission: { edit: "deny" }` внутри `agents` в OpenCode v2 молча
+    // отбрасывается: `opencode debug config` показывает `"explore": {}`, и субагент
+    // сохраняет право редактирования. Проверено на v2.2.7.
     "explore": {
       "permissions": [
         { "action": "read", "resource": "*", "effect": "allow" },
