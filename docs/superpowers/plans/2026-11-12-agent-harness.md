@@ -263,7 +263,7 @@ BOM; запускать через `powershell.exe` 5.1, не `pwsh` 7); Telegra
 
 Run:
 ```powershell
-Select-String -Path AGENTS.md -Pattern 'bun|npm|next|react|eslint|playwright|tsc|shadcn|gallery|галере|photo|1pg'
+Select-String -Path AGENTS.md -Pattern 'bun|npm|next|react|eslint|playwright|tsc|shadcn|gallery|галере|photo|1pg|node_modules|css'
 ```
 Expected: пусто.
 
