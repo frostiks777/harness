@@ -299,33 +299,38 @@ git commit -m "feat: add stack-neutral AGENTS.md template"
   // Модель субагентам здесь НЕ задаётся: без неё они наследуют модель родительской сессии.
   // Пин вида `provider/model` пережил бы смену провайдера и уронил бы прогон в CI.
   "agents": {
-    // Исследовательский субагент: только чтение и веб, без edit/bash/task,
+    // Исследовательский субагент: только чтение и веб, без edit/shell/subagent,
     // чтобы разведка не могла случайно что-то изменить.
+    //
+    // ВАЖНО: это native V2-форма (`permissions` — массив правил action/resource/effect).
+    // V1-форма `permission: { edit: "deny" }` внутри `agents` в OpenCode v2 молча
+    // отбрасывается: `opencode debug config` показывает `"explore": {}`, и субагент
+    // сохраняет право редактирования. Проверено на v2.2.7.
     "explore": {
-      "permission": {
-        "read": "allow",
-        "glob": "allow",
-        "grep": "allow",
-        "list": "allow",
-        "webfetch": "allow",
-        "websearch": "allow",
-        "skill": "allow",
-        "edit": "deny",
-        "bash": "deny",
-        "task": "deny",
-        "external_directory": "deny"
-      }
+      "permissions": [
+        { "action": "read", "resource": "*", "effect": "allow" },
+        { "action": "glob", "resource": "*", "effect": "allow" },
+        { "action": "grep", "resource": "*", "effect": "allow" },
+        { "action": "list", "resource": "*", "effect": "allow" },
+        { "action": "webfetch", "resource": "*", "effect": "allow" },
+        { "action": "websearch", "resource": "*", "effect": "allow" },
+        { "action": "skill", "resource": "*", "effect": "allow" },
+        { "action": "edit", "resource": "*", "effect": "deny" },
+        { "action": "shell", "resource": "*", "effect": "deny" },
+        { "action": "subagent", "resource": "*", "effect": "deny" },
+        { "action": "external_directory", "resource": "*", "effect": "deny" }
+      ]
     }
   }
 
   // MCP-серверы добавляются здесь, когда проекту нужен конкретный сервер, например:
   //
   // "mcp": {
-  //   "my-server": {
-  //     "type": "local",
-  //     "command": ["<команда запуска>", "mcp"],
-  //     "enabled": true,
-  //     "timeout": 60000
+  //   "servers": {
+  //     "my-server": {
+  //       "type": "local",
+  //       "command": ["<команда запуска>", "mcp"]
+  //     }
   //   }
   // }
 }
@@ -338,6 +343,14 @@ Run:
 node -e "const fs=require('fs');const s=fs.readFileSync('opencode.jsonc','utf8').replace(/^\s*\/\/.*$/gm,'');JSON.parse(s);console.log('jsonc ok')"
 ```
 Expected: `jsonc ok`.
+
+Если OpenCode установлен — проверь, что native V2-права не отброшены:
+
+```powershell
+opencode debug config | Select-String '"explore"' -Context 0,4
+```
+Expected: `explore` содержит массив `permissions`, а не `{}`. Если `{}` — форма
+не распознана; вернись к native V2-синтаксису, а не к V1 `permission`.
 
 - [ ] **Step 3: Commit**
 
