@@ -1,0 +1,21 @@
+# Секреты
+.env
+.env.*
+!.env.example
+
+# Состояние Telegram-моста (личное, не коммитится никогда)
+telegram-bot/inbox.jsonl
+telegram-bot/outbox.jsonl
+telegram-bot/decisions.jsonl
+telegram-bot/.bot.pid
+telegram-bot/.bot.lock
+
+# Зависимости
+node_modules/
+
+# ОС
+.DS_Store
+Thumbs.db
+
+# SDD-workspace (черновики исполнения плана)
+.superpowers/
