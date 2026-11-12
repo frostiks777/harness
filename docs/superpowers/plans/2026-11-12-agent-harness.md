@@ -62,6 +62,9 @@ node_modules/
 # ОС
 .DS_Store
 Thumbs.db
+
+# SDD-workspace (черновики исполнения плана)
+.superpowers/
 ```
 
 - [ ] **Step 2: Создать `LICENSE` (MIT)**
@@ -358,7 +361,7 @@ git commit -m "feat: add stack-neutral opencode config"
 
 - [ ] **Step 1: Создать `.agents/shared/checks.md` (шаблон без зашитых команд)**
 
-```markdown
+````markdown
 # Чек-чейн перед коммитом
 
 Единый источник команд проверок. Используется скиллами `perform-task` и `verify`.
@@ -410,7 +413,7 @@ Baseline — ноль ошибок. Красный запуск после тв�
 
 Пункты 2–4 зелёные; для UI-изменений — ещё и 5. Либо в задаче записан конкретный
 честный блокер, а не «готово» при красной проверке.
-```
+````
 
 - [ ] **Step 2: Скопировать `docs/agents/issue-tracker.md` и вычистить проектное**
 
@@ -572,6 +575,7 @@ New-Item -ItemType Directory -Force .agents | Out-Null
 Copy-Item C:\My_projects_GIT\1pg_gall\.agents\skills .agents\ -Recurse
 Remove-Item .agents\skills\apply-design -Recurse
 Remove-Item .agents\skills\apply-design-v2 -Recurse
+# Дополнительно удалить скиллы, исключённые лицензионным аудитом Task 5 (если такие есть).
 Copy-Item C:\My_projects_GIT\1pg_gall\skills-lock.json .
 ```
 
@@ -1064,7 +1068,7 @@ PASS/FAIL; открытые пункты «требует владельца».
 ```powershell
 Select-String -Path INSTALL.md -Pattern 'не перезаписывай|дифф|THIRD-PARTY-NOTICES|84|question'
 ```
-Expected: четыре маркера найдены (`не перезаписывай`, `дифф`, `THIRD-PARTY-NOTICES`, `84`).
+Expected: найдены все маркеры (`не перезаписывай`, `дифф`, `THIRD-PARTY-NOTICES`, `84`).
 
 - [ ] **Step 3: Commit**
 
