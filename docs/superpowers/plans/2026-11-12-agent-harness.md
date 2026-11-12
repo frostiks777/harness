@@ -1087,9 +1087,23 @@ git commit -m "docs: add agent-facing install guide"
 
 - [ ] **Step 1: Дописать `README.md` до финального вида**
 
-Разделы: что это; состав (ядро + адаптеры); «Как накатить» (цитата для агента);
-структура каталогов; требования (OpenCode v2; для адаптеров — свои); обновление
-(ссылка на `docs/updating.md`); лицензии; «что не входит» (проектная память, деплой).
+Язык — **простой и деловой, для человека, который не знает внутренностей**: что это даёт,
+зачем нужно, как начать. Без жаргона «стек-нейтральное ядро», «SDD», «плейсхолдеры».
+
+Обязательные разделы:
+
+1. **Что это** — 2–3 предложения: готовый набор правил и навыков для AI-агентов; подключил
+   к проекту — агент знает, как работать, что проверять и как отчитываться.
+2. **Кому подходит** — командам и одиночным разработчикам, которые используют AI-агентов
+   в проектах любого стека.
+3. **Как начать** — цитата для агента: «Прочитай INSTALL.md и накати харнесс на этот проект».
+4. **Что внутри** — ядро (правила, 84 навыка, проверки, память проекта) и опциональные
+   адаптеры (Claude Code, Cursor, GitHub Actions, Telegram) — по одному предложению на каждый.
+5. **Требования** — OpenCode v2; для адаптеров — свои (кратко).
+6. **Обновление** — ссылка на `docs/updating.md`.
+7. **Лицензия** — MIT + ссылка на `THIRD-PARTY-NOTICES.md`.
+8. **Чего здесь нет** — память и деплой конкретного проекта; это переносится отдельно.
+
 
 - [ ] **Step 2: Создать `docs/updating.md`**
 
@@ -1175,26 +1189,48 @@ Expected: `84`; (2) пусто; (3) — только безобидные сов
 Показать владельцу `git log --oneline` и `git status`; **дождаться явного «публикуй»** —
 репозиторий публичный, ошибка не откатывается.
 
-- [ ] **Step 4: Создать публичный репозиторий и запушить**
+- [ ] **Step 4: Влить в `main` и запушить в существующий репозиторий**
+
+Репозиторий `https://github.com/frostiks777/harness` уже существует и публичен
+(проверено: `gh repo view frostiks777/harness` → `PUBLIC`); `origin` на него настроен.
 
 ```powershell
-gh repo create frostiks777/agent-harness --public --source . --remote origin --push
+git checkout main
+git merge --ff-only feat/harness-core
+git push -u origin main
 ```
 
-- [ ] **Step 5: Подтвердить публикацию**
+- [ ] **Step 5: Заполнить поля проекта на GitHub**
+
+Описание — простым деловым языком, без жаргона:
 
 ```powershell
-gh repo view frostiks777/agent-harness --json name,visibility,url
+gh repo edit frostiks777/harness `
+  --description "Готовый набор правил и навыков для AI-агентов: подключите репозиторий к проекту — и агент сам настроит рабочие правила, проверки и помощников." `
+  --add-topic ai-agents `
+  --add-topic ai-coding `
+  --add-topic opencode `
+  --add-topic developer-tools `
+  --add-topic claude-code `
+  --add-topic cursor
+```
+
+- [ ] **Step 6: Подтвердить публикацию**
+
+```powershell
+gh repo view frostiks777/harness --json name,visibility,url,description,repositoryTopics
 git ls-remote origin main
 ```
-Expected: `"visibility":"PUBLIC"`, URL вида `https://github.com/frostiks777/agent-harness`,
+Expected: `"visibility":"PUBLIC"`; описание заполнено; темы содержат `ai-agents`, `opencode`;
 `main` присутствует в remote.
 
 ---
 
 ## Acceptance criteria (из спеки §10)
 
-- [ ] Публичный `frostiks777/agent-harness` создан, `main` запушен.
+- [ ] Публичный `frostiks777/harness` создан, `main` запушен.
+- [ ] Описание репозитория и темы заполнены на GitHub, понятным бизнес-языком; `README.md`
+      написан так же.
 - [ ] `LICENSE` (MIT), `THIRD-PARTY-NOTICES.md`, `README.md`, `INSTALL.md` на месте.
 - [ ] Ядро и адаптеры соответствуют спеке §3; скиллов 84; `skills-lock.json` на месте.
 - [ ] `AGENTS.md` и `checks.md` — валидные шаблоны без стек-специфики и личных данных.
